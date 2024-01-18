@@ -11,11 +11,10 @@ import java.util.stream.Collectors;
 @Service
 public class DepartmentService {
     private final EmployeeService employeeService;
-    DepartmentService(EmployeeService employeeService) {
+    public DepartmentService(EmployeeService employeeService) {
         this.employeeService = employeeService;
     }
     public double maxSalary(int departmentId) {
-
         return employeeService.getEmployees()
                 .entrySet()
                 .stream()

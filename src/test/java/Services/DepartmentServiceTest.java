@@ -11,6 +11,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
@@ -42,8 +43,8 @@ class DepartmentServiceTest {
         employeeService.add("Петр", "Петрович",2,200.00f);
         employeeService.add("Анна", "Олеговна",3,1000.00f);
         employeeService.add("Семен", "Семенович",3,300.00f);
-        // Вместо 1 можно использовать Mokito для правильной работы теста
-        Assertions.assertEquals(departmentService.maxSalary(1),max);
+        Mockito.when(departmentGenerate.generateDepartment()).thenReturn(1);
+        Assertions.assertEquals(departmentService.maxSalary(departmentGenerate.generateDepartment()),max);
     }
     @ParameterizedTest
     @MethodSource("params")
@@ -60,8 +61,8 @@ class DepartmentServiceTest {
         employeeService.add("Петр", "Петрович",2,200.00f);
         employeeService.add("Анна", "Олеговна",3,1000.00f);
         employeeService.add("Семен", "Семенович",3,300.00f);
-        // Вместо 1 можно использовать Mokito для правильной работы теста
-        Assertions.assertEquals(departmentService.minSalary(1),min);
+        Mockito.when(departmentGenerate.generateDepartment()).thenReturn(1);
+        Assertions.assertEquals(departmentService.minSalary(departmentGenerate.generateDepartment()),min);
     }
 
     @ParameterizedTest
@@ -73,10 +74,10 @@ class DepartmentServiceTest {
         employeeService.add("Петр", "Петрович",2,200.00f);
         employeeService.add("Анна", "Олеговна",3,1000.00f);
         employeeService.add("Семен", "Семенович",3,300.00f);
-        // Вместо 1 можно использовать Mokito для правильной работы теста
-        Assertions.assertEquals(departmentService.sumSalary(1),
+        Mockito.when(departmentGenerate.generateDepartment()).thenReturn(1);
+        Assertions.assertEquals(departmentService.sumSalary(departmentGenerate.generateDepartment()),
                 employees.stream()
-                        .filter(item -> item.getDepartment() == 1)
+                        .filter(item -> item.getDepartment() == departmentGenerate.generateDepartment())
                         .mapToDouble(Employee::getSalary)
                         .sum());
     }
@@ -90,14 +91,12 @@ class DepartmentServiceTest {
         employeeService.add("Анна", "Олеговна",3,1000.00f);
         employeeService.add("Семен", "Семенович",3,300.00f);
         List<Employee> employeeList = new ArrayList<>();
-        // Вместо 1 можно использовать Mokito для правильной работы теста
-        for (int i = 0; i < departmentService.allForDepartments(1).size(); i++){
-            employeeList.add(departmentService.allForDepartments(1).get(i).getValue());
+        Mockito.when(departmentGenerate.generateDepartment()).thenReturn(1);
+        for (int i = 0; i < departmentService.allForDepartments(departmentGenerate.generateDepartment()).size(); i++){
+            employeeList.add(departmentService.allForDepartments(departmentGenerate.generateDepartment()).get(i).getValue());
         }
-        System.out.println(departmentService.allForDepartments(1));
-        Assertions.assertTrue(employees.stream().filter(item -> item.getDepartment() == 1).toList().containsAll(employeeList));
+        Assertions.assertTrue(employees.stream().filter(item -> item.getDepartment() == departmentGenerate.generateDepartment()).toList().containsAll(employeeList));
     }
-
     @ParameterizedTest
     @MethodSource("params")
     void all(List<Employee> employees) throws WrongFirstOrLastName {
